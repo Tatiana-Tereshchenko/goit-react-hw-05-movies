@@ -1,6 +1,6 @@
 
 import  { lazy } from 'react';
-import {  Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 
 const Header = lazy(() => import('./Header/Header'));
@@ -13,7 +13,7 @@ const NotFound = lazy(() => import('./NotFound/NotFound'));
 
 export const App = () => {
   return (
-    <div>
+     <div>
       <Routes>
         <Route path="/" element={<Header />}>
           <Route index element={<Home />} />
