@@ -1,5 +1,5 @@
 
-import  { lazy } from 'react';
+import  { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 
@@ -13,7 +13,8 @@ const NotFound = lazy(() => import('./NotFound/NotFound'));
 
 export const App = () => {
   return (
-     <div>
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/" element={<Header />}>
           <Route index element={<Home />} />
@@ -24,7 +25,8 @@ export const App = () => {
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
-      </Routes>
+        </Routes>
+        </Suspense>
     </div>
   );
 };

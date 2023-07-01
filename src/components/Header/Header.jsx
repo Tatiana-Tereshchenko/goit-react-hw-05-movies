@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import css from './Header.module.css';
 
 
@@ -17,6 +17,7 @@ function Header  ()  {
                     </li>
                 </ul>
             </nav>
+            <Outlet />
         </header>
     )
 };
