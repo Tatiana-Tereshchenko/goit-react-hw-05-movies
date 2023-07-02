@@ -1,0 +1,14 @@
+.item_film {
+    background-color: rgb(168, 222, 222);
+}
+.item {
+    margin-top: 8px;
+    color: rgb(72, 27, 114);
+    font-size: 25px;
+    text-decoration: none;
+    list-style: none;
+    margin-left: 0px;
+}
+.link {
+    text-decoration: none;
+}

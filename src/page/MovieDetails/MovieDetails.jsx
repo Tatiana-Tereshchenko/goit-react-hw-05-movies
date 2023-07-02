@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchMovieDetails } from 'components/Utils/Api';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate} from 'react-router-dom';
 import css from './MovieDetails.module.css';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+ const navigate = useNavigate();;
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -18,7 +19,7 @@ const MovieDetails = () => {
   }, [movieId]);
 
  const handleBackClick = () => {
-    window.history.back();
+    navigate('/');;
   };
 
   if (!movie) {
