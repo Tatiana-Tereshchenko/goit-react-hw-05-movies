@@ -19,7 +19,7 @@ const MovieDetails = () => {
   }, [movieId]);
 
  const handleBackClick = () => {
-    navigate('/');;
+    navigate(-1);;
   };
 
   if (!movie) {

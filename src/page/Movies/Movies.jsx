@@ -1,64 +1,68 @@
 import  { useState, useEffect} from 'react';
-import { useNavigate,useLocation  } from 'react-router-dom';
+
 import { fetchMovieSearch } from 'components/Utils/Api';
 import css from './Movies.module.css';
 import MoviesList from 'components/MoviesList/MoviesList';
 
-function Movies() {
-    const [query, setQuery] = useState('');
-    const [movies, setMovies] = useState([]);
-    const [searched, setSearched] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
+const Movies = () => {
+  const [query, setQuery] = useState('');
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
-    const searchMovies = async () => {
-    const results = await fetchMovieSearch(query);
-        setMovies(results);
-        localStorage.setItem('searchResults', JSON.stringify(results));
-        navigate(`/movies?query=${encodeURIComponent(query)}`);
-        setSearched(true);
-    };
+  useEffect(() => {
+    const storedQuery = localStorage.getItem('movieQuery');
+    const storedMovies = localStorage.getItem('movieResults');
 
-    useEffect(() => {
-    const storedResults = localStorage.getItem('searchResults');
-        if (storedResults) {
-        setMovies(JSON.parse(storedResults));
-        }
-      const searchParams = new URLSearchParams(window.location.search);
-      const searchQuery = searchParams.get('query');
-        setQuery(searchQuery || '');
-  }, [location.search]);
-    
-    useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.removeItem('searchResults');
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-    
-  
-    useEffect(() => {
-      setQuery('');
-      setSearched(false);
+    if (storedQuery && storedMovies) {
+      setQuery(storedQuery);
+      setMovies(JSON.parse(storedMovies));
+    }
   }, []);
 
-    return (
+  useEffect(() => {
+    localStorage.setItem('movieQuery', query);
+    localStorage.setItem('movieResults', JSON.stringify(movies));
+  }, [query, movies]);
+
+  useEffect(() => {
+    setQuery(localStorage.getItem('movieQuery') || '');
+  }, []);
+
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
+  };
+
+  const handleSearch = async () => {
+    setIsLoading(true);
+    setHasSearched(true);
+
+    try {
+      const searchResults = await fetchMovieSearch(query);
+      setMovies(searchResults);
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      setMovies([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
     <div>
-        <input  className={css.input} type="text" defaultValue={query} onChange={(e) => setQuery(e.target.value)} />
-        <button className={css.button} onClick={searchMovies}>Search</button>
-        {movies.length > 0 || !searched ? (
-        <MoviesList movies={movies} />
+      <h1 className={css.title}>Search Movies</h1>
+      <div>
+        <input className={css.input} type="text" value={query} onChange={handleInputChange} />
+        <button className={css.button} onClick={handleSearch}>Search</button>
+      </div>
+      {isLoading ? (
+        <p>Loading...</p>
       ) : (
-        <p>No movies found.</p>
+        hasSearched && movies.length === 0 && query !== '' && <p>No movies found.</p>
       )}
+      {movies.length > 0 && <MoviesList movies={movies} />}
     </div>
-    );
-}
+  );
+};
 
 export default Movies;
-
