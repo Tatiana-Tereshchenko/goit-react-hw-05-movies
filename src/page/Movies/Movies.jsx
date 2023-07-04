@@ -1,5 +1,4 @@
 import  { useState, useEffect} from 'react';
-
 import { fetchMovieSearch } from 'components/Utils/Api';
 import css from './Movies.module.css';
 import MoviesList from 'components/MoviesList/MoviesList';
@@ -26,7 +25,13 @@ const Movies = () => {
   }, [query, movies]);
 
   useEffect(() => {
-    setQuery(localStorage.getItem('movieQuery') || '');
+    const params = new URLSearchParams(window.location.search);
+    const storedQuery = params.get('query');
+    setQuery(storedQuery || '');
+  }, []);
+
+  useEffect(() => {
+    setQuery(''); // Clear the input value when the component mounts
   }, []);
 
   const handleInputChange = (event) => {
@@ -40,6 +45,8 @@ const Movies = () => {
     try {
       const searchResults = await fetchMovieSearch(query);
       setMovies(searchResults);
+      const params = new URLSearchParams({ query });
+      window.location.href = `?${params.toString()}`;
     } catch (error) {
       console.error('Error fetching movies:', error);
       setMovies([]);
@@ -52,8 +59,15 @@ const Movies = () => {
     <div>
       <h1 className={css.title}>Search Movies</h1>
       <div>
-        <input className={css.input} type="text" value={query} onChange={handleInputChange} />
-        <button className={css.button} onClick={handleSearch}>Search</button>
+        <input
+          className={css.input}
+          type="text"
+          value={query}
+          onChange={handleInputChange}
+        />
+        <button className={css.button} onClick={handleSearch}>
+          Search
+        </button>
       </div>
       {isLoading ? (
         <p>Loading...</p>
