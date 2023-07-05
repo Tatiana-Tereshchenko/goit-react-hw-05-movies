@@ -7,7 +7,8 @@ import css from './MovieDetails.module.css';
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
- const navigate = useNavigate();;
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -29,7 +30,7 @@ const MovieDetails = () => {
   return (
     <div>
       <h1 className={css.title}>{movie.title}</h1>
-      <button className={css.backButton} onClick={handleBackClick}>
+      <button  className={css.backButton} onClick={handleBackClick}>
         <svg width="24" height="24" className={css.backIcon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
     <path d="M14.71 17.29L13.3 15.88L8.82 12.41H20V10.41H8.82L13.3 6.94L14.71 5.53L9.47 10.77L9.46 10.78L9.47 10.77L14.71 16.01L14.72 16L14.71 16.01L9.47 21.25L9.47 21.25L9.46 21.24L9.47 21.25L14.71 17.29Z" />
   </svg> 
